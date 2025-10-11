@@ -5,7 +5,6 @@
 	export interface AnalysisConfig {
 		systemPrompt: string;
 		analysisPrompt: string;
-		remixPrompt: string;
 		model: string;
 		apiKey: string;
 		baseURL: string;
@@ -33,6 +32,8 @@
 	} = $props();
 
 	function createAnalysisPrompt(site: SiteData): string {
+		if (!config) return '';
+
 		const referenceSection = `
 
 REFERENCE
@@ -42,11 +43,16 @@ REFERENCE
 - HTML sample: ${site.html.replace(/\s+/g, ' ').slice(0, 40000)}
 - CSS sample: ${site.css.replace(/\s+/g, ' ').slice(0, 40000)}
 - Text sample: ${site.textSample}`;
-		
+
 		return config.analysisPrompt + referenceSection;
 	}
 
 	export async function analyzeSites(sites: SiteData[]): Promise<void> {
+		if (!config) {
+			onError?.('Configuration is missing');
+			return;
+		}
+
 		try {
 			const { OpenAI } = await import('openai');
 			const openai = new OpenAI({
@@ -83,58 +89,20 @@ REFERENCE
 					}
 
 					onAnalysisUpdate?.(index, '', true);
-				} catch (err) {
+				} catch (err: any) {
 					console.error(`Analysis failed for site ${index + 1}:`, err);
-					onError?.(`Analysis failed for site ${index + 1}`);
+					const errorMessage = err?.error?.message || err?.message || `Analysis failed for site ${index + 1}`;
+					onError?.(errorMessage);
 				}
 			});
 
 			await Promise.allSettled(analysisPromises);
 		} catch (err: any) {
-			onError?.(err?.message || 'Failed to initialize analysis service');
+			const errorMessage = err?.error?.message || err?.message || 'Failed to initialize analysis service';
+			onError?.(errorMessage);
 		}
 	}
 
-	export async function generateRemix(summaries: string[]): Promise<void> {
-		try {
-			const { OpenAI } = await import('openai');
-			const openai = new OpenAI({
-				apiKey: config.apiKey,
-				baseURL: config.baseURL,
-				dangerouslyAllowBrowser: true
-			});
-
-			const inputSection = `
-
-INPUT:
-${summaries.map((s, i) => `--- Summary ${i + 1} ---\n${s}`).join('\n\n')}`;
-
-			const fullRemixPrompt = config.remixPrompt + inputSection;
-
-			const stream = await openai.chat.completions.create({
-				model: config.model,
-				messages: [
-					{
-						role: 'system',
-						content: 'You generate brand-safe, accessible, implementation-ready design prompts and briefs.'
-					},
-					{ role: 'user', content: fullRemixPrompt }
-				],
-				stream: true
-			});
-
-			for await (const chunk of stream) {
-				const delta = chunk.choices?.[0]?.delta?.content || '';
-				if (delta) {
-					onAnalysisUpdate?.(-1, delta, false); // Use -1 to indicate remix
-				}
-			}
-
-			onAnalysisUpdate?.(-1, '', true);
-		} catch (err: any) {
-			onError?.(err?.message || 'Failed to generate unified brief');
-		}
-	}
 </script>
 
 <!-- This component doesn't render anything -->

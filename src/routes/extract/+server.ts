@@ -59,7 +59,7 @@ function sanitizeHtml(html: string) {
 // Helper functions for DOM traversal
 function getElementsByTagName(dom: Node[], tagName: string): Element[] {
 	const results: Element[] = [];
-	
+
 	function traverse(nodes: Node[]) {
 		for (const node of nodes) {
 			if (node.type === 'tag') {
@@ -68,19 +68,19 @@ function getElementsByTagName(dom: Node[], tagName: string): Element[] {
 					results.push(element);
 				}
 			}
-			if (node.children) {
+			if ('children' in node && Array.isArray(node.children)) {
 				traverse(node.children);
 			}
 		}
 	}
-	
+
 	traverse(dom);
 	return results;
 }
 
 function getElementsByAttribute(dom: Node[], attrName: string, attrValue?: string): Element[] {
 	const results: Element[] = [];
-	
+
 	function traverse(nodes: Node[]) {
 		for (const node of nodes) {
 			if (node.type === 'tag') {
@@ -95,30 +95,30 @@ function getElementsByAttribute(dom: Node[], attrName: string, attrValue?: strin
 					}
 				}
 			}
-			if (node.children) {
+			if ('children' in node && Array.isArray(node.children)) {
 				traverse(node.children);
 			}
 		}
 	}
-	
+
 	traverse(dom);
 	return results;
 }
 
 function getTextContent(node: Node): string {
 	let text = '';
-	
+
 	function traverse(n: Node) {
 		if (n.type === 'text') {
 			text += (n as any).data;
 		}
-		if (n.children) {
+		if ('children' in n && Array.isArray(n.children)) {
 			for (const child of n.children) {
 				traverse(child);
 			}
 		}
 	}
-	
+
 	traverse(node);
 	return text;
 }

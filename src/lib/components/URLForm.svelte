@@ -4,93 +4,182 @@
 	import Card from './Card.svelte';
 
 	let {
-		urls = $bindable(['', '', '']),
+		url = $bindable(''),
+		apiKey = $bindable(''),
+		baseURL = $bindable('https://api.openai.com/v1'),
+		model = $bindable('gpt-4o-mini'),
 		loading = false,
 		onSubmit,
 		class: className = ''
 	}: {
-		urls?: string[];
+		url?: string;
+		apiKey?: string;
+		baseURL?: string;
+		model?: string;
 		loading?: boolean;
-		onSubmit?: (data: { urls: string[] }) => void;
+		onSubmit?: (data: { url: string; apiKey: string; baseURL: string; model: string }) => void;
 		class?: string;
 	} = $props();
 
 	let formErrors: Record<string, string> = $state({});
 
+	function handleUrlBlur() {
+		const trimmedUrl = url.trim();
+		if (trimmedUrl && !/^https?:\/\//i.test(trimmedUrl)) {
+			url = `https://${trimmedUrl}`;
+		}
+	}
+
 	function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		formErrors = {};
 
-		const cleanUrls = urls
-			.map((url) => {
-				const trimmed = url.trim();
-				if (!trimmed) return '';
-				if (/^https?:\/\//i.test(trimmed)) return trimmed;
-				return `https://${trimmed}`;
-			})
-			.filter(Boolean);
+		const trimmedUrl = url.trim();
+		const trimmedApiKey = apiKey.trim();
+		const trimmedBaseURL = baseURL.trim();
+		const trimmedModel = model.trim();
 
 		// Validation
-		if (cleanUrls.length === 0) {
-			formErrors.urls = 'Please enter at least one URL';
+		if (!trimmedUrl) {
+			formErrors.url = 'Please enter a URL';
 			return;
 		}
 
-
-		// Validate URLs
-		for (let i = 0; i < cleanUrls.length; i++) {
-			try {
-				new URL(cleanUrls[i]);
-			} catch {
-				formErrors[`url-${i}`] = 'Please enter a valid URL';
-				return;
-			}
+		if (!trimmedApiKey) {
+			formErrors.apiKey = 'Please enter your OpenAI API key';
+			return;
 		}
 
-		onSubmit?.({ urls: cleanUrls });
+		if (!trimmedBaseURL) {
+			formErrors.baseURL = 'Please enter a base URL';
+			return;
+		}
+
+		if (!trimmedModel) {
+			formErrors.model = 'Please enter a model name';
+			return;
+		}
+
+		// Clean URL
+		const cleanUrl = /^https?:\/\//i.test(trimmedUrl) ? trimmedUrl : `https://${trimmedUrl}`;
+
+		// Validate URL
+		try {
+			new URL(cleanUrl);
+		} catch {
+			formErrors.url = 'Please enter a valid URL';
+			return;
+		}
+
+		// Validate base URL
+		try {
+			new URL(trimmedBaseURL);
+		} catch {
+			formErrors.baseURL = 'Please enter a valid base URL';
+			return;
+		}
+
+		onSubmit?.({ url: cleanUrl, apiKey: trimmedApiKey, baseURL: trimmedBaseURL, model: trimmedModel });
 	}
 
 	const urlIcon = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
 	</svg>`;
 
+	const keyIcon = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+	</svg>`;
+
 </script>
 
 <Card class="form-card {className}">
 	<div class="form-header">
-		<h2 class="form-title">Extract from Websites</h2>
+		<h2 class="form-title">Analyze a Website</h2>
 		<p class="form-description">
-			Enter up to three public URLs to analyze.
+			Enter a website URL and your OpenAI API key to generate a design analysis.
 		</p>
 	</div>
 
 	<form onsubmit={handleSubmit} class="form-content">
 		<div class="url-inputs">
 			<div class="input-section">
-				<h3 class="input-section-title">Website URLs</h3>
-				{#if formErrors.urls}
-					<p class="section-error">{formErrors.urls}</p>
+				<h3 class="input-section-title">Website URL</h3>
+				{#if formErrors.url}
+					<p class="section-error">{formErrors.url}</p>
 				{/if}
 			</div>
 
-			{#each urls as url, i}
-				<Input
-					type="url"
-					bind:value={urls[i]}
-					placeholder={`https://example${i + 1}.com`}
-					icon={urlIcon}
-					required={i === 0}
-					error={formErrors[`url-${i}`] || ''}
-					class="url-input"
-				/>
-			{/each}
+			<Input
+				type="url"
+				bind:value={url}
+				placeholder="example.com"
+				icon={urlIcon}
+				required
+				error={formErrors.url || ''}
+				class="url-input"
+				onblur={handleUrlBlur}
+			/>
+
+			<div class="input-section">
+				<h3 class="input-section-title">OpenAI API Key</h3>
+				{#if formErrors.apiKey}
+					<p class="section-error">{formErrors.apiKey}</p>
+				{/if}
+				<p class="input-hint">Your API key is stored locally and never sent to our servers.</p>
+			</div>
+
+			<Input
+				type="password"
+				bind:value={apiKey}
+				placeholder="sk-..."
+				icon={keyIcon}
+				required
+				error={formErrors.apiKey || ''}
+				class="url-input"
+			/>
+
+			<div class="input-section">
+				<h3 class="input-section-title">OpenAI Base URL</h3>
+				{#if formErrors.baseURL}
+					<p class="section-error">{formErrors.baseURL}</p>
+				{/if}
+				<p class="input-hint">Default is https://api.openai.com/v1. Change for custom endpoints.</p>
+			</div>
+
+			<Input
+				type="url"
+				bind:value={baseURL}
+				placeholder="https://api.openai.com/v1"
+				icon={urlIcon}
+				required
+				error={formErrors.baseURL || ''}
+				class="url-input"
+			/>
+
+			<div class="input-section">
+				<h3 class="input-section-title">OpenAI Model</h3>
+				{#if formErrors.model}
+					<p class="section-error">{formErrors.model}</p>
+				{/if}
+				<p class="input-hint">Model to use for analysis (e.g., gpt-4o-mini, gpt-4o)</p>
+			</div>
+
+			<Input
+				type="text"
+				bind:value={model}
+				placeholder="gpt-4o-mini"
+				icon={keyIcon}
+				required
+				error={formErrors.model || ''}
+				class="url-input"
+			/>
 		</div>
 
 
 		<div class="form-actions">
 			<Button type="submit" variant="primary" size="lg" {loading} fullWidth class="submit-button">
 				{#if loading}
-					Analyzing Websites...
+					Analyzing Website...
 				{:else}
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
@@ -157,6 +246,12 @@
 		margin-bottom: var(--spacing-2);
 	}
 
+	.input-hint {
+		font-size: var(--font-size-xs);
+		color: var(--color-text-tertiary);
+		margin: var(--spacing-1) 0 0 0;
+	}
+
 	.section-error {
 		font-size: var(--font-size-sm);
 		color: var(--color-danger);
@@ -178,10 +273,6 @@
 
 		.submit-button {
 			flex: 1;
-		}
-
-		.help-button {
-			flex-shrink: 0;
 		}
 	}
 </style>

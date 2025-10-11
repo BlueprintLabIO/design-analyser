@@ -23,10 +23,7 @@
 	function saveConfig() {
 		config.systemPrompt = editConfig.systemPrompt;
 		config.analysisPrompt = editConfig.analysisPrompt;
-		config.remixPrompt = editConfig.remixPrompt;
 		config.model = editConfig.model;
-		config.apiKey = editConfig.apiKey;
-		config.baseURL = editConfig.baseURL;
 		visible = false;
 	}
 
@@ -71,29 +68,29 @@
 				<div class="config-section">
 					<label for="analysis-prompt" class="config-label">
 						Analysis Prompt Template
-						<span class="label-description">Instructions for analyzing individual websites</span>
+						<span class="label-description">Instructions for analyzing websites</span>
 					</label>
 					<textarea
 						id="analysis-prompt"
 						class="config-textarea large"
 						bind:value={editConfig.analysisPrompt}
-						rows="4"
+						rows="6"
 						placeholder="Enter the analysis prompt template..."
 					></textarea>
 				</div>
 
 				<div class="config-section">
-					<label for="remix-prompt" class="config-label">
-						Remix Prompt Template
-						<span class="label-description">Instructions for combining multiple analyses</span>
+					<label for="model" class="config-label">
+						Model
+						<span class="label-description">OpenAI model to use for analysis</span>
 					</label>
-					<textarea
-						id="remix-prompt"
-						class="config-textarea"
-						bind:value={editConfig.remixPrompt}
-						rows="4"
-						placeholder="Enter the remix prompt template..."
-					></textarea>
+					<input
+						id="model"
+						type="text"
+						class="config-input"
+						bind:value={editConfig.model}
+						placeholder="gpt-4o-mini"
+					/>
 				</div>
 			</div>
 

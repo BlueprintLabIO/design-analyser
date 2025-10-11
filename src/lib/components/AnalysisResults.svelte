@@ -102,6 +102,7 @@
 
 <style>
 	.results-section {
+		margin-top: var(--spacing-12);
 		margin-bottom: var(--spacing-12);
 	}
 
