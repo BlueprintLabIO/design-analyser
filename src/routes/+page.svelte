@@ -119,7 +119,7 @@
 <div class="main-container">
 	<!-- Hero Section -->
 	<HeroSection
-		title="Design <span class='text-[var(--color-accent-primary)]'>Documentation</span> Gallery"
+		title="Design <span class='text-[var(--color-accent-primary)]'></span> Gallery"
 	/>
 
 	<!-- Curated Sites Gallery -->
