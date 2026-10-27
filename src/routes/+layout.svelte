@@ -65,7 +65,7 @@
 			<!-- Desktop Navigation -->
 			<nav class="hidden items-center gap-6 md:flex">
 				<a
-					href="https://github.com"
+					href="https://github.com/BlueprintLabIO/design-analyser"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
@@ -200,7 +200,7 @@
 				<ul class="space-y-4">
 					<li>
 						<a
-							href="https://github.com"
+							href="https://github.com/BlueprintLabIO/design-analyser"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="block py-3 text-lg font-medium text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent-primary)]"
@@ -284,7 +284,7 @@
 					<h4 class="text-sm font-medium text-[var(--color-text-secondary)]">Resources</h4>
 					<nav class="flex flex-col gap-2">
 						<a
-							href="https://github.com"
+							href="https://github.com/BlueprintLabIO/design-analyser"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="text-sm text-[var(--color-text-tertiary)] transition-colors hover:text-[var(--color-accent-primary)]"
@@ -296,9 +296,9 @@
 
 				<!-- Legal Section -->
 				<div class="space-y-4">
-					<h4 class="text-sm font-medium text-[var(--color-text-secondary)]">Legal</h4>
+					<h4 class="text-sm font-medium text-[var(--color-text-secondary)]">Credits</h4>
 					<div class="flex flex-col gap-2 text-xs text-[var(--color-text-tertiary)]">
-						<span>© 2025 Blueprint</span>
+						<span>© 2025–2026 Yao Ke</span>
 						<span>Built with modern web standards</span>
 					</div>
 				</div>

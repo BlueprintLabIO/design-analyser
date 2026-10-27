@@ -94,7 +94,7 @@
 
 <Card class="form-card {className}">
 	<div class="form-header">
-		<h2 class="form-title">Analyze a Website</h2>
+		<h2 class="form-title">Analyse a Website</h2>
 		<p class="form-description">
 			Enter a website URL and your OpenAI API key to generate a design analysis.
 		</p>
@@ -179,7 +179,7 @@
 		<div class="form-actions">
 			<Button type="submit" variant="primary" size="lg" {loading} fullWidth class="submit-button">
 				{#if loading}
-					Analyzing Website...
+					Analysing Website...
 				{:else}
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path

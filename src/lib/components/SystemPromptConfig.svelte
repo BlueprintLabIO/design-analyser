@@ -68,7 +68,7 @@
 				<div class="config-section">
 					<label for="analysis-prompt" class="config-label">
 						Analysis Prompt Template
-						<span class="label-description">Instructions for analyzing websites</span>
+						<span class="label-description">Instructions for analysing websites</span>
 					</label>
 					<textarea
 						id="analysis-prompt"

@@ -55,7 +55,7 @@
 
 						{#if generating[i]}
 							<div class="result-status">
-								<LoadingSpinner size="sm" text="Analyzing..." />
+								<LoadingSpinner size="sm" text="Analysing..." />
 							</div>
 						{/if}
 					</div>
@@ -71,7 +71,7 @@
 									readonly
 									class="result-textarea"
 									placeholder={generating[i]
-										? 'Analyzing website design patterns...'
+										? 'Analysing website design patterns...'
 										: 'Analysis will appear here'}
 									value={summary}
 								></textarea>

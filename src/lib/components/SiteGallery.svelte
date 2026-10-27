@@ -24,7 +24,7 @@
 <div class="gallery-container">
 	<h2 class="gallery-title">Curated Design Documentation</h2>
 	<p class="gallery-description">
-		Browse pre-analyzed design systems from top websites
+		Browse pre-analysed design systems from top websites
 	</p>
 
 	<div class="gallery-grid">

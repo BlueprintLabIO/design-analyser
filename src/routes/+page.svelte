@@ -116,6 +116,11 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Design Analyser</title>
+	<meta name="description" content="Analyse and extract design insights from any website." />
+</svelte:head>
+
 <div class="main-container">
 	<!-- Hero Section -->
 	<HeroSection
@@ -125,7 +130,7 @@
 	<!-- Curated Sites Gallery -->
 	<SiteGallery sites={curatedSites} />
 
-	<!-- Analyze Your Own Site Section -->
+	<!-- Analyse Your Own Site Section -->
 	<div class="custom-analysis-section">
 		<button
 			class="toggle-analysis-button"
@@ -139,7 +144,7 @@
 					d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 				/>
 			</svg>
-			<span>Analyze Your Own Site</span>
+			<span>Analyse Your Own Site</span>
 			<svg
 				class="chevron-icon"
 				class:rotated={showAnalysisForm}
